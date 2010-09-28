@@ -25,6 +25,9 @@
 @property (nonatomic, retain) HMGLTransitionView *transitionView;
 @property (nonatomic, retain) UIView *containerView;
 
+@property (nonatomic, retain) UIViewController *oldController;
+@property (nonatomic, retain) UIViewController *newController;
+
 @end
 
 
@@ -32,6 +35,9 @@
 
 @synthesize transitionView;
 @synthesize containerView;
+
+@synthesize oldController;
+@synthesize newController;
 
 #pragma mark -
 #pragma mark Singleton
@@ -42,6 +48,8 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	if (self = [super init]) {
 		tempOverlayView = [[UIImageView alloc] init];
 		tempOverlayView.transform = CGAffineTransformScale(tempOverlayView.transform, 1, -1);		
+		
+		transitionType = HMGLTransitionTypeNone;
 		
 		// Just create transition view.
 		self.transitionView;
@@ -80,6 +88,8 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 			
 	NSAssert(self.transitionView.transition, @"Transition must be set before calling beginTransition.");
 	
+	transitionType = HMGLTransitionTypeViewTransition;
+	
 	transitionView.transform = CGAffineTransformIdentity;
 	tempOverlayView.transform = CGAffineTransformIdentity;
 	tempOverlayView.transform = CGAffineTransformScale(tempOverlayView.transform, 1, -1);	
@@ -104,6 +114,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	
 	NSAssert(containerView, @"Container view not set.");
 	NSAssert(self.transitionView.transition, @"Transition not set.");
+	NSAssert(transitionType == HMGLTransitionTypeViewTransition, @"transitionType has changed between beginTransition / commitTransition");
 	
 	// create end texture
 	[self.transitionView createEndTextureWithView:containerView];
@@ -118,7 +129,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	[transitionView startAnimation];
 }
 
-- (void)switchViewController:(UIViewController*)viewController1 withController:(UIViewController*)viewController2 dismiss:(BOOL)dismiss {
+- (void)switchViewControllers {
 	
 	NSAssert(self.transitionView.transition, @"Transition not set.");
 	
@@ -127,57 +138,69 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	
 	// transition view
 	[self.transitionView reset];
-	self.transitionView.transform = viewController1.view.transform;
-	self.transitionView.frame = viewController1.view.frame;
+	self.transitionView.transform = oldController.view.transform;
+	self.transitionView.frame = oldController.view.frame;
 	[transitionView layoutSubviews];
 	
 	// create begin texture
-	UIImage *image = [transitionView createBeginTextureWithView:viewController1.view];
+	UIImage *image = [transitionView createBeginTextureWithView:oldController.view];
 	
 	// temp overlay image
 	tempOverlayView.image = image;
-	
-	// present / dismiss controller
-	if (dismiss) {
-		[viewController1 dismissModalViewControllerAnimated:NO];
-	} 
-	else {
-		[viewController1 presentModalViewController:viewController2 animated:NO];
-	}
-	
+					
 	// create end texture
-	[self.transitionView createEndTextureWithView:viewController2.view];
+	newController.view.transform = oldController.view.transform;	
+	newController.view.frame = oldController.view.frame;
+	[self.transitionView createEndTextureWithView:newController.view];
 	
 	// transition view
-	[viewController2.view.superview addSubview:transitionView];
+	[oldController.view.superview addSubview:transitionView];
 	
 	// add temp overlay view
-	CGRect rect = viewController2.view.frame;
+	CGRect rect = oldController.view.frame;
 	
 	// temp overlay view
 	tempOverlayView.contentMode = UIViewContentModeBottomLeft;
-	tempOverlayView.transform = viewController2.view.transform;	
+	tempOverlayView.transform = oldController.view.transform;	
 	tempOverlayView.transform = CGAffineTransformScale(tempOverlayView.transform, 1, -1);			
 	tempOverlayView.frame = rect;	
-	[viewController2.view.superview insertSubview:tempOverlayView belowSubview:transitionView];	
+	[oldController.view.superview insertSubview:tempOverlayView belowSubview:transitionView];	
 	
 	[transitionView startAnimation];	
 }
 
 - (void)presentModalViewController:(UIViewController*)modalViewController onViewController:(UIViewController*)viewController {
 
-	[self switchViewController:viewController withController:modalViewController dismiss:NO];
+	transitionType = HMGLTransitionTypeControllerPresentation;
+	self.oldController = viewController;
+	self.newController = modalViewController;
+	[self switchViewControllers];
 }
 
 - (void)dismissModalViewController:(UIViewController*)modalViewController {
-	
-	[self switchViewController:modalViewController withController:modalViewController.parentViewController dismiss:YES];
+
+	transitionType = HMGLTransitionTypeControllerDismission;
+	self.oldController = modalViewController;
+	self.newController = modalViewController.parentViewController;
+	[self switchViewControllers];
 }
 
 - (void)transitionViewDidFinishTransition:(HMGLTransitionView*)_transitionView {
 
+	// finish transition
 	[transitionView removeFromSuperview];
 	[tempOverlayView removeFromSuperview];
+	
+	// view controllers
+	if (transitionType == HMGLTransitionTypeControllerPresentation) {
+		[oldController presentModalViewController:newController animated:NO];
+	}
+	else if (transitionType == HMGLTransitionTypeControllerDismission) {
+		[oldController dismissModalViewControllerAnimated:NO];
+	}	
+	
+	// transition type
+	transitionType = HMGLTransitionTypeNone;
 }
 
 #pragma mark -
@@ -186,6 +209,9 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	[tempOverlayView release];
 	[containerView release];
 	[transitionView release];
+	
+	[oldController release];
+	[newController release];
 	
 	[super dealloc];
 }

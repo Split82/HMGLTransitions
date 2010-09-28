@@ -22,14 +22,30 @@
 #import "HMGLTransition.h"
 #import "HMGLTransitionView.h"
 
+typedef enum {
+	HMGLTransitionTypeNone,
+	HMGLTransitionTypeViewTransition,
+	HMGLTransitionTypeControllerPresentation,
+	HMGLTransitionTypeControllerDismission
+}
+HMGLTransitionType;
+
 @interface HMGLTransitionManager : NSObject <HMGLTransitionViewDelegate> {
 
 	HMGLTransitionView *transitionView;
+	
+	// UIView transitions
 	UIView *containerView;
+	
+	// UIViewController transitions
+	UIViewController *oldController;
+	UIViewController *newController;
 	
 	UIImageView *tempOverlayView;
 	
 	BOOL animating;
+	
+	HMGLTransitionType transitionType;
 }
 
 + (HMGLTransitionManager*)sharedTransitionManager;

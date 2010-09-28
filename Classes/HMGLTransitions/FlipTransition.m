@@ -41,6 +41,9 @@
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	
+	glDisable(GL_LIGHTING);
+	glColor4f(1.0, 1.0, 1.0, 1.0);		
+	
 	if (transitionType == FlipTransitionLeft) {	
 		animationTime = 0;
 	}

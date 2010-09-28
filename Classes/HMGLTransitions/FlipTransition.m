@@ -57,12 +57,12 @@
 		beginTexture = endTexture;
 		endTexture = t;
 	}
+		
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	GLfloat w = 2.5;
 	GLfloat h = 2.5;
-	
-	glClearColor(0.0, 0.0, 0.0, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	GLfloat vertices[] = {
         0, -h,
@@ -139,12 +139,22 @@
 	if (transitionType == FlipTransitionLeft) {
 		animationTime += M_PI * frameTime * 1.2;
 		
-		return animationTime > M_PI;
+		if (animationTime > M_PI) {
+			animationTime = M_PI;
+			return YES;
+		}
+		
+		return NO;
 	}
 	else {
 		animationTime -= M_PI * frameTime * 1.2;
 		
-		return animationTime < 0;
+		if (animationTime < 0) {
+			animationTime = 0;
+			return YES;
+		}
+		
+		return NO;
 	}
 }
 

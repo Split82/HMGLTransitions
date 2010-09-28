@@ -20,23 +20,69 @@
 
 #import "ViewController.h"
 
-#import "HMGLTransitionManager.h"
-
 #import "Switch3DTransition.h"
 #import "FlipTransition.h"
 #import "RotateTransition.h"
 #import "ClothTransition.h"
+#import "DoorsTransition.h"
 
 #import "ModalController.h"
+
+@interface ViewController()
+
+@property (nonatomic, retain) HMGLTransition *transition;
+
+@end
+
 
 @implementation ViewController
 
 @synthesize view1;
 @synthesize view2;
 
+@synthesize transition;
+
+#pragma mark -
+#pragma mark UIViewController
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
+	
+		Switch3DTransition *t1 = [[[Switch3DTransition alloc] init] autorelease];
+		t1.transitionType = Switch3DTransitionLeft;
+		
+		FlipTransition *t2 = [[[FlipTransition alloc] init] autorelease];
+		t2.transitionType = FlipTransitionRight;		
+		
+		transitionsArray = [[NSArray alloc] initWithObjects:
+							[[[Switch3DTransition alloc] init] autorelease],
+							t1,
+							[[[ClothTransition alloc] init] autorelease],							
+							[[[FlipTransition alloc] init] autorelease],
+							t2,
+							[[[RotateTransition alloc] init] autorelease],
+							[[[DoorsTransition alloc] init] autorelease],
+							nil];
+		
+		transitionsNamesArray = [[NSArray alloc] initWithObjects:
+								 @"Switch 3D right",
+								 @"Switch 3D left",
+								 @"Cloth",
+								 @"Flip left",
+								 @"Flip right",
+								 @"Rotate",
+								 @"Doors",
+								 nil];
+								 
+		
+		self.transition = [transitionsArray objectAtIndex:0];
+		
+	}
+	return self;
+}
+
 - (void)viewDidLoad {
 	
-	// Creating singleton of transition manager in this place helps to reduce lag when showing first transition.
+	// Creating singleton of transition manager here helps to reduce lag when showing first transition.
 	[HMGLTransitionManager sharedTransitionManager];
 }
 
@@ -45,103 +91,66 @@
     return YES;
 }
 
-// transitions
-- (void)switch3DTransitionRight {
+#pragma mark -
+#pragma mark Transitions
+- (void)switchToView2 {
+	
+	UIView *containerView = view1.superview;
 
-	Switch3DTransition *transition = [[[Switch3DTransition alloc] init] autorelease];
 	[[HMGLTransitionManager sharedTransitionManager] setTransition:transition];	
-	[[HMGLTransitionManager sharedTransitionManager] beginTransition:self.view];
+	[[HMGLTransitionManager sharedTransitionManager] beginTransition:containerView];
 	
 	// Here you can do whatever you want except changing position, size or transformation of container view, or removing it from view hierarchy.
 	view2.frame = view1.frame;
 	[view1 removeFromSuperview];
-	[self.view addSubview:view2];
+	[containerView addSubview:view2];
 	
 	[[HMGLTransitionManager sharedTransitionManager] commitTransition];
 }
 
-- (void)switch3DTransitionLeft {
+- (void)switchToView1 {
 	
-	// Set up transition
-	Switch3DTransition *transition = [[[Switch3DTransition alloc] init] autorelease];
-	transition.transitionType = Switch3DTransitionLeft;
-	
+	UIView *containerView = view2.superview;	
+
 	// Set transition
 	[[HMGLTransitionManager sharedTransitionManager] setTransition:transition];	
-	// Begin transition on container view
-	[[HMGLTransitionManager sharedTransitionManager] beginTransition:self.view];
+	[[HMGLTransitionManager sharedTransitionManager] beginTransition:containerView];
 	
 	// Here you can do whatever you want except changing position, size or transformation of container view, or removing it from view hierarchy.
 	view1.frame = view2.frame;
 	[view2 removeFromSuperview];	
-	[self.view addSubview:view1];
+	[containerView addSubview:view1];
 	
 	// Commit transition
 	[[HMGLTransitionManager sharedTransitionManager] commitTransition];
 }
 
-- (void)flipTransitionRight {
-	
-	FlipTransition *transition = [[[FlipTransition alloc] init] autorelease];
-	transition.transitionType = FlipTransitionRight;
-	[[HMGLTransitionManager sharedTransitionManager] setTransition:transition];	
-	[[HMGLTransitionManager sharedTransitionManager] beginTransition:self.view];
-	
-	// Here you can do whatever you want except changing position, size or transformation of container view, or removing it from view hierarchy.
-	view2.frame = view1.frame;
-	[view1 removeFromSuperview];
-	[self.view addSubview:view2];
-	
-	[[HMGLTransitionManager sharedTransitionManager] commitTransition];
+#pragma mark -
+#pragma mark ModalController delegate
+- (void)modalControllerDidFinish:(ModalController *)modalController {
+
+	[[HMGLTransitionManager sharedTransitionManager] setTransition:transition];		
+	[[HMGLTransitionManager sharedTransitionManager] dismissModalViewController:modalController];
 }
 
-- (void)flipTransitionLeft {
+#pragma mark -
+#pragma mark Actions
+- (IBAction)viewTransitionButtonPressed:(id)sender {
+	UIButton *button = (UIButton*)sender;
 	
-	FlipTransition *transition = [[[FlipTransition alloc] init] autorelease];
-	[[HMGLTransitionManager sharedTransitionManager] setTransition:transition];	
-	[[HMGLTransitionManager sharedTransitionManager] beginTransition:self.view];
-	
-	// Here you can do whatever you want except changing position, size or transformation of container view, or removing it from view hierarchy.
-	view1.frame = view2.frame;
-	[view2 removeFromSuperview];
-	[self.view addSubview:view1];
-	
-	[[HMGLTransitionManager sharedTransitionManager] commitTransition];
+	// view transition to view1 or view2 depending on actual view
+	if (button.superview == view1) {
+		[self switchToView2];
+	}
+	else {
+		[self switchToView1];
+	}
 }
 
-- (void)rotateToView2 {
+- (IBAction)modalPresentationButtonPressed:(id)sender {
 	
-	RotateTransition *transition = [[[RotateTransition alloc] init] autorelease];
 	[[HMGLTransitionManager sharedTransitionManager] setTransition:transition];	
-	[[HMGLTransitionManager sharedTransitionManager] beginTransition:self.view];
 	
-	// Here you can do whatever you want except changing position, size or transformation of container view, or removing it from view hierarchy.
-	view2.frame = view1.frame;
-	[view1 removeFromSuperview];
-	[self.view addSubview:view2];
-	
-	[[HMGLTransitionManager sharedTransitionManager] commitTransition];
-}
-
-- (void)rotateToView1 {
-	
-	RotateTransition *transition = [[[RotateTransition alloc] init] autorelease];
-	[[HMGLTransitionManager sharedTransitionManager] setTransition:transition];	
-	[[HMGLTransitionManager sharedTransitionManager] beginTransition:self.view];
-	
-	// Here you can do whatever you want except changing position, size or transformation of container view, or removing it from view hierarchy.
-	view1.frame = view2.frame;
-	[view2 removeFromSuperview];
-	[self.view addSubview:view1];
-	
-	[[HMGLTransitionManager sharedTransitionManager] commitTransition];
-}
-
-- (void)modalController {
-	
-	ClothTransition *transition = [[[ClothTransition alloc] init] autorelease];
-	[[HMGLTransitionManager sharedTransitionManager] setTransition:transition];	
-
 	ModalController *newController;
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
 		newController = [[ModalController alloc] initWithNibName:@"ModalController-iPad" bundle:nil];
@@ -149,55 +158,57 @@
 	else {
 		newController = [[ModalController alloc] initWithNibName:@"ModalController" bundle:nil];
 	}
-	
 	newController.delegate = self;
+	
 	[[HMGLTransitionManager sharedTransitionManager] presentModalViewController:newController onViewController:self];
 	[ModalController release];
 }
 
-- (void)modalControllerDidFinish:(ModalController *)modalController {
-	ClothTransition *transition = [[[ClothTransition alloc] init] autorelease];
-	[[HMGLTransitionManager sharedTransitionManager] setTransition:transition];	
-	
-	[[HMGLTransitionManager sharedTransitionManager] dismissModalViewController:modalController];
+#pragma mark -
+#pragma mark TableView delegate and data source
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return 1;
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return [transitionsArray count];
+}
 
-// actions
-- (IBAction)button1Pressed:(id)sender {
-	UIButton *button = (UIButton*)sender;
-	switch (button.tag) {
-		case 1: 
-			[self switch3DTransitionRight];
-			break;
-		case 2: 
-			[self flipTransitionRight];
-			break;
-		case 3: 
-			[self rotateToView2];
-			break;
-		case 4:
-			[self modalController];
-			break;
-
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    static NSString *CellIdentifier = @"Cell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+    }
+    
+    if ([transitionsArray objectAtIndex:indexPath.row] == transition) {
+		cell.accessoryType = UITableViewCellAccessoryCheckmark;
+		selectedTransitionIdx = indexPath.row;
 	}
+	else {
+		cell.accessoryType = UITableViewCellAccessoryNone;
+	}
+	
+	cell.textLabel.text = [transitionsNamesArray objectAtIndex:indexPath.row];
+    
+    return cell;
 }
 
-- (IBAction)button2Pressed:(id)sender {
-	UIButton *button = (UIButton*)sender;
-	switch (button.tag) {
-		case 1: 
-			[self switch3DTransitionLeft];
-			break;
-		case 2: 
-			[self flipTransitionLeft];
-			break;				
-		case 3:
-			[self rotateToView1];
-			break;
-	}	
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	if (indexPath.row != selectedTransitionIdx) {
+		
+		self.transition = [transitionsArray objectAtIndex:indexPath.row];		
+		[tableView reloadRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, [NSIndexPath indexPathForRow:selectedTransitionIdx inSection:0], nil] withRowAnimation:UITableViewRowAnimationNone];
+	}
+	
+	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 }
 
+#pragma mark -
+#pragma mark Memory
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -213,6 +224,9 @@
 
 
 - (void)dealloc {
+	[transitionsArray release];
+	[transition release];
+	
 	[view1 release];
 	[view2 release];
 	

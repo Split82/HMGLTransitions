@@ -18,27 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
-#import "ModalController.h"
+#import <Foundation/Foundation.h>
+#import "HMGLTransition.h"
 
-#import "HMGLTransitionManager.h"
-
-@interface ViewController : UIViewController <ModalControllerDelegate, UITableViewDelegate, UITableViewDataSource> {
-
-	UIView *view1;
-	UIView *view2;
-		
-	HMGLTransition *transition;
-	NSArray *transitionsArray;
-	NSArray *transitionsNamesArray;
-	NSInteger selectedTransitionIdx;
+@interface DoorsTransition : HMGLTransition {
+	
+	GLfloat animationTime;
 }
 
-@property (nonatomic, retain) IBOutlet UIView *view1;
-@property (nonatomic, retain) IBOutlet UIView *view2;
-
-- (IBAction)viewTransitionButtonPressed:(id)sender;
-- (IBAction)modalPresentationButtonPressed:(id)sender;
-
 @end
-

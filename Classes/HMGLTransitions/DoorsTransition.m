@@ -17,15 +17,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#import "Switch3DTransition.h"
 
-@implementation Switch3DTransition
+#import "DoorsTransition.h"
 
-@synthesize transitionType;
+@implementation DoorsTransition
 
 - (id)init {
 	if (self = [super init]) {
-		transitionType = Switch3DTransitionRight;
 	}
 	return self;
 }
@@ -36,7 +34,7 @@
     glLoadIdentity();
     glFrustumf(-0.1, 0.1, -0.1, 0.1, 0.1, 100.0); 
 	
-	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	
     animationTime = 0;
@@ -44,68 +42,104 @@
 
 - (void)drawWithBeginTexture:(GLuint)beginTexture endTexture:(GLuint)endTexture {
 	
-	// Direction of animation
-	GLfloat direction = 1;
-	if (transitionType == Switch3DTransitionLeft) {
-		direction = -1;
-	}
-	
+
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+	
+	GLfloat w = 1.0;
+	GLfloat h = 1.0;
+	
 	GLfloat vertices[] = {
-        -1, -1,
-		1, -1,
-        -1,  1,
-		1,  1,
+        -w, -h,
+		w, -h,
+        -w,  h,
+		w,  h,
+    };
+    	
+	GLfloat verticesHalf[] = {
+        -w * 0.5, -h,
+		w * 0.5, -h,
+        -w * 0.5,  h,
+		w * 0.5,  h,
     };
     
+    GLfloat texcoords1[] = {
+		basicTexCoords.x0, basicTexCoords.y0,
+		(basicTexCoords.x1 + basicTexCoords.x0) * 0.5, (basicTexCoords.y1 + basicTexCoords.y0) * 0.5,
+		basicTexCoords.x2, basicTexCoords.y2,
+		(basicTexCoords.x3 + basicTexCoords.x2) * 0.5, (basicTexCoords.y2 + basicTexCoords.y3) * 0.5,	
+    };
+	
+    GLfloat texcoords2[] = {
+		(basicTexCoords.x1 + basicTexCoords.x0) * 0.5, (basicTexCoords.y1 + basicTexCoords.y0) * 0.5,
+		basicTexCoords.x1, basicTexCoords.y1,
+		(basicTexCoords.x3 + basicTexCoords.x2) * 0.5, (basicTexCoords.y2 + basicTexCoords.y3) * 0.5,
+		basicTexCoords.x3, basicTexCoords.y3,	
+    };		
+	
     glEnable(GL_TEXTURE_2D);
-
-    glVertexPointer(2, GL_FLOAT, 0, vertices);
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glTexCoordPointer(2, GL_FLOAT, 0, &basicTexCoords);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	
 	
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity(); 
 	
-	GLfloat sa = sin(animationTime);
 	GLfloat sah = sin(animationTime * 0.5);
-	GLfloat sa3 = sa * sa * sa;
-			
+	
+	GLfloat intensity = sah * sah;
+	
+	// end view
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glTexCoordPointer(2, GL_FLOAT, 0, &basicTexCoords);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	
 	glPushMatrix();
-	// begin view
-	glBindTexture(GL_TEXTURE_2D, beginTexture);	
-    glTranslatef(direction * sa3 * 1.1, 0, -sah * sah * sah - 1);
-	GLfloat intensity = 1 - sah * sah;
+	glBindTexture(GL_TEXTURE_2D, endTexture);
+    glTranslatef(0, 0, -1.2 + sah * 0.2);	
 	glColor4f(intensity, intensity, intensity, 1.0);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
+	glPopMatrix();	
+	
+	glColor4f(1.0 - intensity, 1.0 - intensity, 1.0 - intensity, 1.0);
+	
+	// left	
+	glPushMatrix();
+	glBindTexture(GL_TEXTURE_2D, beginTexture);		
+    glVertexPointer(2, GL_FLOAT, 0, verticesHalf);
+    glEnableClientState(GL_VERTEX_ARRAY);	
+    glTexCoordPointer(2, GL_FLOAT, 0, texcoords1);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    glTranslatef(-w, 0, -1);
+	glRotatef(-sah * sah * sah * 90, 0, 1, 0);		
+	glTranslatef(w * 0.5, 0, 0);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glPopMatrix();
 	
-	// end view
-	glPushMatrix();
-	glBindTexture(GL_TEXTURE_2D, endTexture);
-    glTranslatef(-direction * sa3 * 1.1, 0, sah * sah * sah - 2);	
-	intensity = sah * sah;
-	glColor4f(intensity, intensity, intensity, 1.0);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);	
-	glPopMatrix();
-	
+	// right
+	glPushMatrix();	
+    glVertexPointer(2, GL_FLOAT, 0, verticesHalf);
+    glEnableClientState(GL_VERTEX_ARRAY);		
+    glTexCoordPointer(2, GL_FLOAT, 0, texcoords2);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);	 
+	glTranslatef(w, 0, -1);
+	glRotatef(sah * sah * sah * 90, 0, 1, 0);		
+	glTranslatef(-w * 0.5, 0, 0);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glPopMatrix();	
 }
 
 - (BOOL)calc:(NSTimeInterval)frameTime {
 	
 	animationTime += M_PI * frameTime * 1.3;
-    
+	
 	if (animationTime > M_PI) {
 		animationTime = M_PI;
 		return YES;
 	}
     
     return NO;
-
+	
 }
 
 @end

@@ -27,12 +27,13 @@
 		AC169B12124FD5FC008F43EA /* ModalController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC169B10124FD5FC008F43EA /* ModalController.xib */; };
 		AC169B6B124FE159008F43EA /* HMLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = AC169B6A124FE159008F43EA /* HMLogo.png */; };
 		AC169CD6124FF423008F43EA /* ClothTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = AC169CD5124FF423008F43EA /* ClothTransition.m */; };
-		AC6F01CB12511E18003E7610 /* ModalController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC6F01C912511E18003E7610 /* ModalController-iPad.xib */; };
-		AC6F01DE12512037003E7610 /* ViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC6F01DD12512037003E7610 /* ViewController-iPad.xib */; };
+		AC3E6FAA125264130066AF56 /* DoorsTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = AC3E6FA9125264130066AF56 /* DoorsTransition.m */; };
+		AC3E70A0125282900066AF56 /* ModalController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC3E709D125282900066AF56 /* ModalController-iPad.xib */; };
+		AC3E70A1125282900066AF56 /* ViewController-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC3E709E125282900066AF56 /* ViewController-iPad.xib */; };
+		AC3E70A2125282900066AF56 /* MainWIndow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC3E709F125282900066AF56 /* MainWIndow-iPad.xib */; };
 		AC6F028B12513567003E7610 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = AC6F028912513567003E7610 /* Icon.png */; };
 		AC6F028C12513567003E7610 /* Icon72.png in Resources */ = {isa = PBXBuildFile; fileRef = AC6F028A12513567003E7610 /* Icon72.png */; };
 		AC6F028E1251360B003E7610 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AC6F028D1251360B003E7610 /* Icon@2x.png */; };
-		AC6F02C8125138D9003E7610 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = AC6F02C7125138D9003E7610 /* MainWindow-iPad.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,12 +70,14 @@
 		AC169B6A124FE159008F43EA /* HMLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = HMLogo.png; sourceTree = "<group>"; };
 		AC169CD4124FF423008F43EA /* ClothTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClothTransition.h; sourceTree = "<group>"; };
 		AC169CD5124FF423008F43EA /* ClothTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClothTransition.m; sourceTree = "<group>"; };
-		AC6F01C912511E18003E7610 /* ModalController-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "ModalController-iPad.xib"; sourceTree = "<group>"; };
-		AC6F01DD12512037003E7610 /* ViewController-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "ViewController-iPad.xib"; sourceTree = "<group>"; };
+		AC3E6FA8125264130066AF56 /* DoorsTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DoorsTransition.h; sourceTree = "<group>"; };
+		AC3E6FA9125264130066AF56 /* DoorsTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DoorsTransition.m; sourceTree = "<group>"; };
+		AC3E709D125282900066AF56 /* ModalController-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "ModalController-iPad.xib"; sourceTree = "<group>"; };
+		AC3E709E125282900066AF56 /* ViewController-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "ViewController-iPad.xib"; sourceTree = "<group>"; };
+		AC3E709F125282900066AF56 /* MainWIndow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "MainWIndow-iPad.xib"; sourceTree = "<group>"; };
 		AC6F028912513567003E7610 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		AC6F028A12513567003E7610 /* Icon72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon72.png; sourceTree = "<group>"; };
 		AC6F028D1251360B003E7610 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		AC6F02C7125138D9003E7610 /* MainWindow-iPad.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = "MainWindow-iPad.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +170,8 @@
 		AC169A74124FCD7C008F43EA /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
+				AC3E6FA8125264130066AF56 /* DoorsTransition.h */,
+				AC3E6FA9125264130066AF56 /* DoorsTransition.m */,
 				AC169CD4124FF423008F43EA /* ClothTransition.h */,
 				AC169CD5124FF423008F43EA /* ClothTransition.m */,
 				AC169A71124FCD72008F43EA /* RotateTransition.h */,
@@ -182,10 +187,10 @@
 		AC6F018D12511D3E003E7610 /* Resources-iPad */ = {
 			isa = PBXGroup;
 			children = (
-				AC6F02C7125138D9003E7610 /* MainWindow-iPad.xib */,
-				AC6F01DD12512037003E7610 /* ViewController-iPad.xib */,
-				AC6F01C912511E18003E7610 /* ModalController-iPad.xib */,
 				AC6F028A12513567003E7610 /* Icon72.png */,
+				AC3E709D125282900066AF56 /* ModalController-iPad.xib */,
+				AC3E709E125282900066AF56 /* ViewController-iPad.xib */,
+				AC3E709F125282900066AF56 /* MainWIndow-iPad.xib */,
 			);
 			name = "Resources-iPad";
 			sourceTree = "<group>";
@@ -264,12 +269,12 @@
 				2899E5220DE3E06400AC0155 /* ViewController.xib in Resources */,
 				AC169B12124FD5FC008F43EA /* ModalController.xib in Resources */,
 				AC169B6B124FE159008F43EA /* HMLogo.png in Resources */,
-				AC6F01CB12511E18003E7610 /* ModalController-iPad.xib in Resources */,
-				AC6F01DE12512037003E7610 /* ViewController-iPad.xib in Resources */,
 				AC6F028B12513567003E7610 /* Icon.png in Resources */,
 				AC6F028C12513567003E7610 /* Icon72.png in Resources */,
 				AC6F028E1251360B003E7610 /* Icon@2x.png in Resources */,
-				AC6F02C8125138D9003E7610 /* MainWindow-iPad.xib in Resources */,
+				AC3E70A0125282900066AF56 /* ModalController-iPad.xib in Resources */,
+				AC3E70A1125282900066AF56 /* ViewController-iPad.xib in Resources */,
+				AC3E70A2125282900066AF56 /* MainWIndow-iPad.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +296,7 @@
 				AC169A73124FCD72008F43EA /* RotateTransition.m in Sources */,
 				AC169B11124FD5FC008F43EA /* ModalController.m in Sources */,
 				AC169CD6124FF423008F43EA /* ClothTransition.m in Sources */,
+				AC3E6FAA125264130066AF56 /* DoorsTransition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

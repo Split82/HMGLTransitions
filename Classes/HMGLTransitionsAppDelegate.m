@@ -32,6 +32,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+		self.viewController = [[ViewController alloc] initWithNibName:@"ViewController-iPad" bundle:nil];
+	}
+	else  {
+		self.viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];		
+	}
     [window addSubview:viewController.view];
     [window makeKeyAndVisible];
 

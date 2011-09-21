@@ -26,7 +26,7 @@
 @property (nonatomic, retain) UIView *containerView;
 
 @property (nonatomic, retain) UIViewController *oldController;
-@property (nonatomic, retain) UIViewController *newController;
+@property (nonatomic, retain) UIViewController *currentController;
 
 @end
 
@@ -37,7 +37,7 @@
 @synthesize containerView;
 
 @synthesize oldController;
-@synthesize newController;
+@synthesize currentController;
 
 #pragma mark -
 #pragma mark Singleton
@@ -52,7 +52,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 		transitionType = HMGLTransitionTypeNone;
 		
 		// Just create transition view.
-		self.transitionView;
+		[self transitionView];
 	}
 	return self;
 }
@@ -149,9 +149,9 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	tempOverlayView.image = image;
 					
 	// create end texture
-	newController.view.transform = oldController.view.transform;	
-	newController.view.frame = oldController.view.frame;
-	[self.transitionView createEndTextureWithView:newController.view];
+	currentController.view.transform = oldController.view.transform;	
+	currentController.view.frame = oldController.view.frame;
+	[self.transitionView createEndTextureWithView:currentController.view];
 	
 	// transition view
 	[oldController.view.superview addSubview:transitionView];
@@ -173,7 +173,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 
 	transitionType = HMGLTransitionTypeControllerPresentation;
 	self.oldController = viewController;
-	self.newController = modalViewController;
+	self.currentController = modalViewController;
 	[self switchViewControllers];
 }
 
@@ -181,7 +181,10 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 
 	transitionType = HMGLTransitionTypeControllerDismission;
 	self.oldController = modalViewController;
-	self.newController = modalViewController.parentViewController;
+	if ([modalViewController respondsToSelector:@selector(presentingViewController)])
+        self.currentController = [modalViewController  presentingViewController];
+    else
+        self.currentController = modalViewController.parentViewController;
 	[self switchViewControllers];
 }
 
@@ -193,7 +196,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	
 	// view controllers
 	if (transitionType == HMGLTransitionTypeControllerPresentation) {
-		[oldController presentModalViewController:newController animated:NO];
+		[oldController presentModalViewController:currentController animated:NO];
 	}
 	else if (transitionType == HMGLTransitionTypeControllerDismission) {
 		[oldController dismissModalViewControllerAnimated:NO];
@@ -211,7 +214,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	[transitionView release];
 	
 	[oldController release];
-	[newController release];
+	[currentController release];
 	
 	[super dealloc];
 }

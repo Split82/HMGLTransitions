@@ -162,7 +162,7 @@
 	
 	[[HMGLTransitionManager sharedTransitionManager] presentModalViewController:newController onViewController:self];
 	
-	[ModalViewController release];
+	[newController release];
 }
 
 #pragma mark -

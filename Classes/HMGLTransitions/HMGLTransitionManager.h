@@ -39,7 +39,7 @@ HMGLTransitionType;
 	
 	// UIViewController transitions
 	UIViewController *oldController;
-	UIViewController *newController;
+	UIViewController *currentController;
 	
 	UIImageView *tempOverlayView;
 	

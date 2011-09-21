@@ -19,15 +19,13 @@
 // THE SOFTWARE.
 #import <UIKit/UIKit.h>
 
-@class ViewController;
+@class RootViewController;
 
 @interface HMGLTransitionsAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
-    ViewController *viewController;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) ViewController *viewController;
 
 @end
 

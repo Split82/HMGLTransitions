@@ -19,26 +19,21 @@
 // THE SOFTWARE.
 
 #import "HMGLTransitionsAppDelegate.h"
-#import "ViewController.h"
+#import "RootViewController.h"
 
 @implementation HMGLTransitionsAppDelegate
 
 @synthesize window;
-@synthesize viewController;
-
 
 #pragma mark -
 #pragma mark Application lifecycle
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-		self.viewController = [[ViewController alloc] initWithNibName:@"ViewController-iPad" bundle:nil];
-	}
-	else  {
-		self.viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];		
-	}
-    [window addSubview:viewController.view];
+    RootViewController *newViewController = [[RootViewController alloc] initWithNibName:@"RootViewController" bundle:nil];
+    self.window.rootViewController = newViewController;
+    [newViewController release];
+
     [window makeKeyAndVisible];
 
     return YES;
@@ -94,7 +89,7 @@
 
 
 - (void)dealloc {
-    [viewController release];
+
     [window release];
     [super dealloc];
 }

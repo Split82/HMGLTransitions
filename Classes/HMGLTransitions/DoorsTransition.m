@@ -22,8 +22,11 @@
 
 @implementation DoorsTransition
 
+@synthesize transitionType;
+
 - (id)init {
 	if (self = [super init]) {
+		transitionType = DoorsTransitionTypeOpen;
 	}
 	return self;
 }
@@ -44,8 +47,13 @@
 }
 
 - (void)drawWithBeginTexture:(GLuint)beginTexture endTexture:(GLuint)endTexture {
+		
+	if (transitionType == DoorsTransitionTypeClose) {
+		GLuint t = endTexture;
+		endTexture = beginTexture;
+		beginTexture = t;
+	}
 	
-
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	

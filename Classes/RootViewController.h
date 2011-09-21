@@ -18,21 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import "HMGLTransition.h"
+#import <UIKit/UIKit.h>
+#import "ModalViewController.h"
 
-typedef enum {
-	DoorsTransitionTypeOpen,
-	DoorsTransitionTypeClose
-} DoorsTransitionType;
+#import "HMGLTransitionManager.h"
 
-@interface DoorsTransition : HMGLTransition {
-	
-	GLfloat animationTime;
-	
-	DoorsTransitionType transitionType;
+@interface RootViewController : UIViewController <ModalControllerDelegate, UITableViewDelegate, UITableViewDataSource> {
+
+	UIView *view1;
+	UIView *view2;
+		
+	HMGLTransition *transition;
+	NSArray *transitionsArray;
+	NSArray *transitionsNamesArray;
+	NSInteger selectedTransitionIdx;
 }
 
-@property (nonatomic, assign) DoorsTransitionType transitionType;
+@property (nonatomic, retain) IBOutlet UIView *view1;
+@property (nonatomic, retain) IBOutlet UIView *view2;
+
+- (IBAction)viewTransitionButtonPressed:(id)sender;
+- (IBAction)modalPresentationButtonPressed:(id)sender;
 
 @end
+

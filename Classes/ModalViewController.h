@@ -18,21 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import "HMGLTransition.h"
+#import <UIKit/UIKit.h>
 
-typedef enum {
-	DoorsTransitionTypeOpen,
-	DoorsTransitionTypeClose
-} DoorsTransitionType;
+@protocol ModalControllerDelegate;
 
-@interface DoorsTransition : HMGLTransition {
-	
-	GLfloat animationTime;
-	
-	DoorsTransitionType transitionType;
+@interface ModalViewController : UIViewController {
+
+	id <ModalControllerDelegate> delegate;
 }
 
-@property (nonatomic, assign) DoorsTransitionType transitionType;
+@property (nonatomic, assign) id <ModalControllerDelegate> delegate;
+
+- (IBAction)closeButtonPressed;
 
 @end
+
+
+@protocol ModalControllerDelegate <NSObject>
+
+- (void)modalControllerDidFinish:(ModalViewController*)modalController;
+
+@end
+

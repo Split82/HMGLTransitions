@@ -52,6 +52,9 @@
 		
 		FlipTransition *t2 = [[[FlipTransition alloc] init] autorelease];
 		t2.transitionType = FlipTransitionRight;		
+        
+        DoorsTransition *t3 = [[[DoorsTransition alloc] init] autorelease]; 
+        t3.transitionType = DoorsTransitionTypeClose; 
 		
 		transitionsArray = [[NSArray alloc] initWithObjects:
 							[[[Switch3DTransition alloc] init] autorelease],
@@ -61,6 +64,7 @@
 							t2,
 							[[[RotateTransition alloc] init] autorelease],
 							[[[DoorsTransition alloc] init] autorelease],
+                            t3, 
 							nil];
 		
 		transitionsNamesArray = [[NSArray alloc] initWithObjects:
@@ -70,7 +74,8 @@
 								 @"Flip left",
 								 @"Flip right",
 								 @"Rotate",
-								 @"Doors",
+								 @"Opening doors",
+								 @"Closing doors",
 								 nil];
 								 
 		

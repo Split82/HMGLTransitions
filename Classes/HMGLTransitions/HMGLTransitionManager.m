@@ -182,7 +182,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	transitionType = HMGLTransitionTypeControllerDismission;
 	self.oldController = modalViewController;
 	if ([modalViewController respondsToSelector:@selector(presentingViewController)]) {
-        self.currentController = [modalViewController presentingViewController];
+        self.currentController = [modalViewController performSelector:@selector(presentingViewController)];
     }
     else {
         self.currentController = modalViewController.parentViewController;

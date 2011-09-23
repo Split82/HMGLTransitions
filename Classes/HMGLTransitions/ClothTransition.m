@@ -31,6 +31,11 @@ typedef struct {
 	GLfloat x, y, z;
 } Vector3;
 
+Vector3 substractVectors(Vector3 v1, Vector3 v2);
+void addVectors(Vector3 *v1, Vector3 v2);
+void multiplyVector(Vector3 *v, GLfloat a);
+GLfloat vectorLength(Vector3 v);
+
 Vector3 substractVectors(Vector3 v1, Vector3 v2) {
 	Vector3 r;
 	r.x = v1.x - v2.x;

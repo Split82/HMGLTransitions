@@ -153,7 +153,7 @@
 	
 	ModalViewController *newController;
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-		newController = [[ModalViewController alloc] initWithNibName:@"ModalViewController-iPad" bundle:nil];
+		newController = [[ModalViewController alloc] initWithNibName:@"ModalViewController~iPad" bundle:nil];
 	}
 	else {
 		newController = [[ModalViewController alloc] initWithNibName:@"ModalViewController" bundle:nil];

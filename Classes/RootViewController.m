@@ -53,6 +53,9 @@
 		FlipTransition *t2 = [[[FlipTransition alloc] init] autorelease];
 		t2.transitionType = FlipTransitionRight;		
 		
+    DoorsTransition *doorsTransition = [[[DoorsTransition alloc] init] autorelease];
+    doorsTransition.leftWeight = 0.80;
+    
 		transitionsArray = [[NSArray alloc] initWithObjects:
 							[[[Switch3DTransition alloc] init] autorelease],
 							t1,
@@ -60,7 +63,8 @@
 							[[[FlipTransition alloc] init] autorelease],
 							t2,
 							[[[RotateTransition alloc] init] autorelease],
-							[[[DoorsTransition alloc] init] autorelease],
+              [[[DoorsTransition alloc] init] autorelease],
+							doorsTransition,
 							nil];
 		
 		transitionsNamesArray = [[NSArray alloc] initWithObjects:
@@ -71,6 +75,7 @@
 								 @"Flip right",
 								 @"Rotate",
 								 @"Doors",
+                 @"Doors Weighted",
 								 nil];
 								 
 		

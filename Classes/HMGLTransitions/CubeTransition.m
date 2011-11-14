@@ -18,7 +18,7 @@
     {
 		transitionType = CubeTransitionLeft;
 	}
-
+    
 	return self;
 }
 
@@ -41,6 +41,8 @@
 
 - (void)drawWithBeginTexture:(GLuint)beginTexture endTexture:(GLuint)endTexture 
 {	
+    int myDirection = transitionType == CubeTransitionLeft ? -1 : 1;
+    
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
@@ -58,15 +60,14 @@
     glTexCoordPointer(2, GL_FLOAT, 0, &basicTexCoords);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	
-	
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity(); 	
     
 	glPushMatrix();
 	// begin view
 	glBindTexture(GL_TEXTURE_2D, beginTexture);	
-    glTranslatef(0, 0, -1.0 );
-	glRotatef(sin(animationTime) * -90, 0, 1, 0); 
+    glTranslatef(0, 0, -1.0);
+	glRotatef(myDirection * -90 * sin(animationTime), 0, 1, 0); 
     glTranslatef(0, 0, 0.5);    
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glPopMatrix();
@@ -75,9 +76,9 @@
 	// end view
 	glBindTexture(GL_TEXTURE_2D, endTexture);	
     glTranslatef(0, 0, -1.0 );
-	glRotatef(sin(animationTime) * -90, 0, 1, 0); 
-    glTranslatef( 0.5, 0.0, 0);    
-    glRotatef( 90, 0, 1, 0 );
+	glRotatef(myDirection * -90 * sin(animationTime), 0, 1, 0); 
+    glTranslatef(myDirection * 0.5, 0.0, 0);    
+    glRotatef(myDirection * 90, 0, 1, 0);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glPopMatrix();
 }
@@ -85,7 +86,7 @@
 
 - (BOOL)calc:(NSTimeInterval)frameTime 
 {	
-	animationTime += M_PI * 0.5 * frameTime * 1.25;
+	animationTime += M_PI * 0.5 * frameTime * 1.5;
     return animationTime > M_PI * 0.5;	
 }
 

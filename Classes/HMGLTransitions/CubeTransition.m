@@ -65,7 +65,7 @@
 	glPushMatrix();
 	// begin view
 	glBindTexture(GL_TEXTURE_2D, beginTexture);	
-    glTranslatef(0, 0, -1.0 - sin(animationTime*2)*0.15 );
+    glTranslatef(0, 0, -1.0 );
 	glRotatef(sin(animationTime) * -90, 0, 1, 0); 
     glTranslatef(0, 0, 0.5);    
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -74,7 +74,7 @@
 	glPushMatrix();
 	// end view
 	glBindTexture(GL_TEXTURE_2D, endTexture);	
-    glTranslatef(0, 0, -1.0- sin(animationTime*2)*0.15 );
+    glTranslatef(0, 0, -1.0 );
 	glRotatef(sin(animationTime) * -90, 0, 1, 0); 
     glTranslatef( 0.5, 0.0, 0);    
     glRotatef( 90, 0, 1, 0 );

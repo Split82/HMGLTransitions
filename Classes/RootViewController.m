@@ -26,6 +26,7 @@
 #import "ClothTransition.h"
 #import "DoorsTransition.h"
 #import "CubeTransition.h"
+#import "FoldTransition.h"
 
 #import "ModalViewController.h"
 
@@ -57,6 +58,18 @@
         DoorsTransition *t3 = [[DoorsTransition alloc] init]; 
         t3.transitionType = DoorsTransitionTypeClose; 
 		
+        FoldTransition* tfld1 = [[FoldTransition alloc] init];
+        tfld1.foldDirection = FoldDirectionRight;
+        FoldTransition* tfld2 = [[FoldTransition alloc] init];
+        tfld2.foldDirection = FoldDirectionLeft;
+        
+        FoldTransition* tufld1 = [[FoldTransition alloc] init];
+        tufld1.foldDirection = FoldDirectionRight;
+        tufld1.foldType = Unfold;
+        FoldTransition* tufld2 = [[FoldTransition alloc] init];
+        tufld2.foldDirection = FoldDirectionLeft;
+        tufld2.foldType = Unfold;
+
 		transitionsArray = [[NSArray alloc] initWithObjects:
 							[[Switch3DTransition alloc] init],
 							t1,
@@ -67,6 +80,10 @@
 							[[DoorsTransition alloc] init],
                             t3, 
                             [[CubeTransition alloc] init], 
+                            tfld1,
+                            tfld2,
+                            tufld1,
+                            tufld2,
 							nil];
 		
 		transitionsNamesArray = [[NSArray alloc] initWithObjects:
@@ -79,6 +96,10 @@
 								 @"Opening doors",
 								 @"Closing doors",
                                  @"Cube", 
+								 @"Fold Right",
+								 @"Fold Left",
+								 @"Unfold Right",
+								 @"Unfold Left",
 								 nil];
 								 
 		

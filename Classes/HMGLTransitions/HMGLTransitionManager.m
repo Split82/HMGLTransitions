@@ -45,6 +45,8 @@
 @property (nonatomic, retain) UIViewController *oldController;
 @property (nonatomic, retain) UIViewController *currentController;
 
+@property(strong) void (^completionBlock)(); 
+
 @end
 
 
@@ -55,6 +57,8 @@
 
 @synthesize oldController;
 @synthesize currentController;
+
+@synthesize completionBlock; 
 
 #pragma mark -
 #pragma mark Singleton
@@ -87,7 +91,6 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 - (HMGLTransitionView*)transitionView {
 	if (!transitionView) {
 		self.transitionView = [[[HMGLTransitionView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)] autorelease];
-		transitionView.delegate = self;
 	}
 	return transitionView;
 }
@@ -143,7 +146,14 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	tempOverlayView.frame = containerView.bounds;
 	[containerView insertSubview:tempOverlayView belowSubview:transitionView];	
 	
-	[transitionView startAnimation];
+	[transitionView animateWithCompletionBlock:^{
+        // finish transition
+        [transitionView removeFromSuperview];
+        [tempOverlayView removeFromSuperview];
+        
+        // transition type
+        transitionType = HMGLTransitionTypeNone;
+    }];
 }
 
 - (void)switchViewControllers {
@@ -183,7 +193,22 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	tempOverlayView.frame = rect;	
 	[oldController.view.superview insertSubview:tempOverlayView belowSubview:transitionView];	
 	
-	[transitionView startAnimation];	
+	[transitionView animateWithCompletionBlock:^{
+        // finish transition
+        [transitionView removeFromSuperview];
+        [tempOverlayView removeFromSuperview];
+        
+        // view controllers
+        if (transitionType == HMGLTransitionTypeControllerPresentation) {
+            [oldController presentModalViewController:currentController animated:NO];
+        }
+        else if (transitionType == HMGLTransitionTypeControllerDismission) {
+            [oldController dismissModalViewControllerAnimated:NO];
+        }	
+        
+        // transition type
+        transitionType = HMGLTransitionTypeNone;
+    }];
 }
 
 - (void)presentModalViewController:(UIViewController*)modalViewController onViewController:(UIViewController*)viewController {
@@ -205,24 +230,6 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
         self.currentController = modalViewController.parentViewController;
     }
 	[self switchViewControllers];
-}
-
-- (void)transitionViewDidFinishTransition:(HMGLTransitionView*)_transitionView {
-
-	// finish transition
-	[transitionView removeFromSuperview];
-	[tempOverlayView removeFromSuperview];
-	
-	// view controllers
-	if (transitionType == HMGLTransitionTypeControllerPresentation) {
-		[oldController presentModalViewController:currentController animated:NO];
-	}
-	else if (transitionType == HMGLTransitionTypeControllerDismission) {
-		[oldController dismissModalViewControllerAnimated:NO];
-	}	
-	
-	// transition type
-	transitionType = HMGLTransitionTypeNone;
 }
 
 #pragma mark -

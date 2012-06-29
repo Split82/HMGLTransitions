@@ -60,6 +60,8 @@
 	int framesCount;
 }
 
+@property(strong) void (^completionBlock)(); 
+
 - (void)deleteFramebuffer;
 - (void)setContext:(EAGLContext *)newContext;
 - (void)setFramebuffer;
@@ -74,7 +76,7 @@
 @synthesize animating;
 @synthesize transition;
 @dynamic animationFrameInterval;
-@synthesize delegate;
+@synthesize completionBlock; 
 
 + (Class)layerClass {
     return [CAEAGLLayer class];
@@ -86,6 +88,7 @@
     if ((self = [super initWithFrame:frame])) {
 		self.userInteractionEnabled = YES;
 		self.opaque = YES;
+        self.completionBlock = nil; 
 		
         // Get the layer
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
@@ -416,39 +419,34 @@
 
 #pragma mark -
 #pragma mark Actions
+
+- (void)animateWithCompletionBlock:(void (^)())block {
+    if (!animating && transition) {
+        self.completionBlock = block; 
+        [self startAnimation]; 
+    }
+}
+
+
 - (void)startAnimation {
     if (!animating && transition) {
-        if (displayLinkSupported) {
-            // CADisplayLink is API new to iPhone SDK 3.1. Compiling against earlier versions will result in a warning, but can be dismissed
-            // if the system version runtime check for CADisplayLink exists in -initWithCoder:. The runtime check ensures this code will
-            // not be called in system versions earlier than 3.1.
-
-            displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(drawView:)];
-            [displayLink setFrameInterval:animationFrameInterval];
-            [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        }
-        else
-            animationTimer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)((1.0 / 60.0) * animationFrameInterval) target:self selector:@selector(drawView:) userInfo:nil repeats:TRUE];
-		
+        displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(drawView:)];
+        [displayLink setFrameInterval:animationFrameInterval];
+        [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        
         animating = TRUE;
     }
 }
 
 - (void)stopAnimation {
-    if (animating)
-    {
-        if (displayLinkSupported)
-        {
-            [displayLink invalidate];
-            displayLink = nil;
-        }
-        else
-        {
-            [animationTimer invalidate];
-            animationTimer = nil;
-        }
+    if (animating) {
+        [displayLink invalidate];
+        displayLink = nil;
 		
-		[delegate transitionViewDidFinishTransition:self];
+        if(self.completionBlock) {
+            self.completionBlock(); 
+            self.completionBlock = nil; 
+        }
 
         animating = FALSE;
     }

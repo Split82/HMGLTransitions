@@ -29,8 +29,6 @@
 
 #import "HMGLTransition.h"
 
-@protocol HMGLTransitionViewDelegate;
-
 // This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
 // The view content is basically an EAGL surface you render your OpenGL scene into.
 // Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
@@ -41,9 +39,8 @@
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
 @property (nonatomic) NSInteger animationFrameInterval;
 @property (nonatomic, retain) HMGLTransition *transition;
-@property (nonatomic, assign) id <HMGLTransitionViewDelegate> delegate;
 
-- (void)startAnimation;
+- (void)animateWithCompletionBlock:(void (^)())completionBlock;
 - (void)stopAnimation;
 - (void)reset;
 
@@ -52,10 +49,4 @@
 
 @end
 
-
-@protocol HMGLTransitionViewDelegate <NSObject>
-
-- (void)transitionViewDidFinishTransition:(HMGLTransitionView*)transitionView;
-
-@end
 

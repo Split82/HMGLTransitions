@@ -30,7 +30,7 @@ typedef enum {
 }
 HMGLTransitionType;
 
-@interface HMGLTransitionManager : NSObject <HMGLTransitionViewDelegate> 
+@interface HMGLTransitionManager : NSObject  
 
 + (HMGLTransitionManager*)sharedTransitionManager;
 

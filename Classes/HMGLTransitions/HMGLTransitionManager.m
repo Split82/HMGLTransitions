@@ -39,11 +39,11 @@
 }
 
 
-@property (nonatomic, retain) HMGLTransitionView *transitionView;
-@property (nonatomic, retain) UIView *containerView;
+@property (nonatomic, strong) HMGLTransitionView *transitionView;
+@property (nonatomic, strong) UIView *containerView;
 
-@property (nonatomic, retain) UIViewController *oldController;
-@property (nonatomic, retain) UIViewController *currentController;
+@property (nonatomic, strong) UIViewController *oldController;
+@property (nonatomic, strong) UIViewController *currentController;
 
 @property(strong) void (^completionBlock)(); 
 
@@ -90,7 +90,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 
 - (HMGLTransitionView*)transitionView {
 	if (!transitionView) {
-		self.transitionView = [[[HMGLTransitionView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)] autorelease];
+		self.transitionView = [[HMGLTransitionView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
 	}
 	return transitionView;
 }
@@ -234,15 +234,5 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 
 #pragma mark -
 #pragma mark Memory
-- (void)dealloc {
-	[tempOverlayView release];
-	[containerView release];
-	[transitionView release];
-	
-	[oldController release];
-	[currentController release];
-	
-	[super dealloc];
-}
 
 @end

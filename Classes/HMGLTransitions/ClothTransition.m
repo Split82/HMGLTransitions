@@ -527,7 +527,6 @@ GLfloat vectorLength(Vector3 v) {
 	free(velocities);
 	free(vertices);
 	free(indices);
-	[super dealloc];
 }
 
 @end

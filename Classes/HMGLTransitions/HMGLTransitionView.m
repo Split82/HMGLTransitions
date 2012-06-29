@@ -103,7 +103,6 @@
 		EAGLContext	*newContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
 		//}
 		[self setContext:newContext];
-		[newContext release];
 		[self setFramebuffer];
 
 		framesCount = 0;
@@ -136,8 +135,7 @@
     {
         [self deleteFramebuffer];
         
-        [context release];
-        context = [newContext retain];
+        context = newContext;
         
         [EAGLContext setCurrentContext:nil];
     }
@@ -459,17 +457,11 @@
 
 #pragma mark -
 #pragma mark Memory
+
 - (void)dealloc {
-	
 	[self deleteTexture:&beginTexture];
 	[self deleteTexture:&endTexture];
-	
     [self deleteFramebuffer];    
-    [context release];
-	
-	[transition release];
-
-    [super dealloc];
 }
 
 @end

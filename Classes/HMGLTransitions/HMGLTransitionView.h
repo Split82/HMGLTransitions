@@ -38,7 +38,7 @@
 
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
 @property (nonatomic) NSInteger animationFrameInterval;
-@property (nonatomic, retain) HMGLTransition *transition;
+@property (nonatomic, strong) HMGLTransition *transition;
 
 - (void)animateWithCompletionBlock:(void (^)())completionBlock;
 - (void)stopAnimation;

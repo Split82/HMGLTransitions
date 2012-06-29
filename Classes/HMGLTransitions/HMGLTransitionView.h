@@ -29,63 +29,18 @@
 
 #import "HMGLTransition.h"
 
-@protocol HMGLTransitionViewDelegate;
-
 // This class wraps the CAEAGLLayer from CoreAnimation into a convenient UIView subclass.
 // The view content is basically an EAGL surface you render your OpenGL scene into.
 // Note that setting the view non-opaque will only work if the EAGL surface has an alpha channel.
-@interface HMGLTransitionView : UIView {    
-
-    EAGLContext *context;
-	
-    // The pixel dimensions of the CAEAGLLayer
-    GLint backingWidth;
-    GLint backingHeight;
-	
-    // The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
-    GLuint defaultFramebuffer, colorRenderbuffer;
-	GLuint depthRenderbuffer;
-
-	//
-    BOOL animating;
-    BOOL displayLinkSupported;
-    NSInteger animationFrameInterval;
-    // Use of the CADisplayLink class is the preferred method for controlling your animation timing.
-    // CADisplayLink will link to the main display and fire every vsync when added to a given run-loop.
-    // The NSTimer class is used only as fallback when running on a pre 3.1 device where CADisplayLink
-    // isn't available.
-    id displayLink;
-    NSTimer *animationTimer;
-	
-	// transition
-	HMGLTransition *transition;
-	
-	// textures
-	GLuint beginTexture;
-	GLuint endTexture;
-	
-	GLfloat textureWidthNormalized;
-	GLfloat textureHeightNormalized;
-	
-	// frame times
-	NSTimeInterval lastTime, thisTime, calcTime;
-	
-	// delegate
-	id <HMGLTransitionViewDelegate> delegate;
-	
-	// frames frame
-	int framesCount;
-}
-
+@interface HMGLTransitionView : UIView 
 @property (nonatomic, readonly) GLfloat textureWidthNormalized;
 @property (nonatomic, readonly) GLfloat textureHeightNormalized;
 
 @property (readonly, nonatomic, getter=isAnimating) BOOL animating;
 @property (nonatomic) NSInteger animationFrameInterval;
-@property (nonatomic, retain) HMGLTransition *transition;
-@property (nonatomic, assign) id <HMGLTransitionViewDelegate> delegate;
+@property (nonatomic, strong) HMGLTransition *transition;
 
-- (void)startAnimation;
+- (void)animateWithCompletionBlock:(void (^)())completionBlock;
 - (void)stopAnimation;
 - (void)reset;
 
@@ -94,10 +49,4 @@
 
 @end
 
-
-@protocol HMGLTransitionViewDelegate <NSObject>
-
-- (void)transitionViewDidFinishTransition:(HMGLTransitionView*)transitionView;
-
-@end
 

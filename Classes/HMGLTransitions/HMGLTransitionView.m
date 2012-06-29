@@ -20,7 +20,47 @@
 
 #import "HMGLTransitionView.h"
 
-@interface HMGLTransitionView()
+@interface HMGLTransitionView() {    
+    
+    EAGLContext *context;
+	
+    // The pixel dimensions of the CAEAGLLayer
+    GLint backingWidth;
+    GLint backingHeight;
+	
+    // The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
+    GLuint defaultFramebuffer, colorRenderbuffer;
+	GLuint depthRenderbuffer;
+    
+	//
+    BOOL animating;
+    BOOL displayLinkSupported;
+    NSInteger animationFrameInterval;
+    // Use of the CADisplayLink class is the preferred method for controlling your animation timing.
+    // CADisplayLink will link to the main display and fire every vsync when added to a given run-loop.
+    // The NSTimer class is used only as fallback when running on a pre 3.1 device where CADisplayLink
+    // isn't available.
+    id displayLink;
+    NSTimer *animationTimer;
+	
+	// transition
+	HMGLTransition *transition;
+	
+	// textures
+	GLuint beginTexture;
+	GLuint endTexture;
+	
+	GLfloat textureWidthNormalized;
+	GLfloat textureHeightNormalized;
+	
+	// frame times
+	NSTimeInterval lastTime, thisTime, calcTime;
+	
+	// frames frame
+	int framesCount;
+}
+
+@property(strong) void (^completionBlock)(); 
 
 - (void)deleteFramebuffer;
 - (void)setContext:(EAGLContext *)newContext;
@@ -36,7 +76,7 @@
 @synthesize animating;
 @synthesize transition;
 @dynamic animationFrameInterval;
-@synthesize delegate;
+@synthesize completionBlock; 
 
 + (Class)layerClass {
     return [CAEAGLLayer class];
@@ -48,6 +88,7 @@
     if ((self = [super initWithFrame:frame])) {
 		self.userInteractionEnabled = YES;
 		self.opaque = YES;
+        self.completionBlock = nil; 
 		
         // Get the layer
         CAEAGLLayer *eaglLayer = (CAEAGLLayer *)self.layer;
@@ -62,7 +103,6 @@
 		EAGLContext	*newContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
 		//}
 		[self setContext:newContext];
-		[newContext release];
 		[self setFramebuffer];
 
 		framesCount = 0;
@@ -95,8 +135,7 @@
     {
         [self deleteFramebuffer];
         
-        [context release];
-        context = [newContext retain];
+        context = newContext;
         
         [EAGLContext setCurrentContext:nil];
     }
@@ -378,39 +417,34 @@
 
 #pragma mark -
 #pragma mark Actions
+
+- (void)animateWithCompletionBlock:(void (^)())block {
+    if (!animating && transition) {
+        self.completionBlock = block; 
+        [self startAnimation]; 
+    }
+}
+
+
 - (void)startAnimation {
     if (!animating && transition) {
-        if (displayLinkSupported) {
-            // CADisplayLink is API new to iPhone SDK 3.1. Compiling against earlier versions will result in a warning, but can be dismissed
-            // if the system version runtime check for CADisplayLink exists in -initWithCoder:. The runtime check ensures this code will
-            // not be called in system versions earlier than 3.1.
-
-            displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(drawView:)];
-            [displayLink setFrameInterval:animationFrameInterval];
-            [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        }
-        else
-            animationTimer = [NSTimer scheduledTimerWithTimeInterval:(NSTimeInterval)((1.0 / 60.0) * animationFrameInterval) target:self selector:@selector(drawView:) userInfo:nil repeats:TRUE];
-		
+        displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(drawView:)];
+        [displayLink setFrameInterval:animationFrameInterval];
+        [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        
         animating = TRUE;
     }
 }
 
 - (void)stopAnimation {
-    if (animating)
-    {
-        if (displayLinkSupported)
-        {
-            [displayLink invalidate];
-            displayLink = nil;
-        }
-        else
-        {
-            [animationTimer invalidate];
-            animationTimer = nil;
-        }
+    if (animating) {
+        [displayLink invalidate];
+        displayLink = nil;
 		
-		[delegate transitionViewDidFinishTransition:self];
+        if(self.completionBlock) {
+            self.completionBlock(); 
+            self.completionBlock = nil; 
+        }
 
         animating = FALSE;
     }
@@ -423,17 +457,11 @@
 
 #pragma mark -
 #pragma mark Memory
+
 - (void)dealloc {
-	
 	[self deleteTexture:&beginTexture];
 	[self deleteTexture:&endTexture];
-	
     [self deleteFramebuffer];    
-    [context release];
-	
-	[transition release];
-
-    [super dealloc];
 }
 
 @end

@@ -20,13 +20,30 @@
 
 #import "HMGLTransitionManager.h"
 
-@interface HMGLTransitionManager()
+@interface HMGLTransitionManager() {
+    
+	HMGLTransitionView *transitionView;
+	
+	// UIView transitions
+	UIView *containerView;
+	
+	// UIViewController transitions
+	UIViewController *oldController;
+	UIViewController *currentController;
+	
+	UIImageView *tempOverlayView;
+	
+	BOOL animating;
+	
+	HMGLTransitionType transitionType;
+}
 
-@property (nonatomic, retain) HMGLTransitionView *transitionView;
-@property (nonatomic, retain) UIView *containerView;
 
-@property (nonatomic, retain) UIViewController *oldController;
-@property (nonatomic, retain) UIViewController *currentController;
+@property (nonatomic, strong) HMGLTransitionView *transitionView;
+@property (nonatomic, strong) UIView *containerView;
+
+@property (nonatomic, strong) UIViewController *oldController;
+@property (nonatomic, strong) UIViewController *currentController;
 
 @end
 
@@ -69,8 +86,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 
 - (HMGLTransitionView*)transitionView {
 	if (!transitionView) {
-		self.transitionView = [[[HMGLTransitionView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)] autorelease];
-		transitionView.delegate = self;
+		self.transitionView = [[HMGLTransitionView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
 	}
 	return transitionView;
 }
@@ -126,7 +142,14 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	tempOverlayView.frame = containerView.bounds;
 	[containerView insertSubview:tempOverlayView belowSubview:transitionView];	
 	
-	[transitionView startAnimation];
+	[transitionView animateWithCompletionBlock:^{
+        // finish transition
+        [transitionView removeFromSuperview];
+        [tempOverlayView removeFromSuperview];
+        
+        // transition type
+        transitionType = HMGLTransitionTypeNone;
+    }];
 }
 
 - (void)switchViewControllers {
@@ -166,7 +189,22 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	tempOverlayView.frame = rect;	
 	[oldController.view.superview insertSubview:tempOverlayView belowSubview:transitionView];	
 	
-	[transitionView startAnimation];	
+	[transitionView animateWithCompletionBlock:^{
+        // finish transition
+        [transitionView removeFromSuperview];
+        [tempOverlayView removeFromSuperview];
+        
+        // view controllers
+        if (transitionType == HMGLTransitionTypeControllerPresentation) {
+            [oldController presentModalViewController:currentController animated:NO];
+        }
+        else if (transitionType == HMGLTransitionTypeControllerDismission) {
+            [oldController dismissModalViewControllerAnimated:NO];
+        }	
+        
+        // transition type
+        transitionType = HMGLTransitionTypeNone;
+    }];
 }
 
 - (void)presentModalViewController:(UIViewController*)modalViewController onViewController:(UIViewController*)viewController {
@@ -182,7 +220,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	transitionType = HMGLTransitionTypeControllerDismission;
 	self.oldController = modalViewController;
 	if ([modalViewController respondsToSelector:@selector(presentingViewController)]) {
-        self.currentController = [modalViewController presentingViewController];
+        self.currentController = [modalViewController performSelector:@selector(presentingViewController)];
     }
     else {
         self.currentController = modalViewController.parentViewController;
@@ -190,35 +228,7 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	[self switchViewControllers];
 }
 
-- (void)transitionViewDidFinishTransition:(HMGLTransitionView*)_transitionView {
-
-	// finish transition
-	[transitionView removeFromSuperview];
-	[tempOverlayView removeFromSuperview];
-	
-	// view controllers
-	if (transitionType == HMGLTransitionTypeControllerPresentation) {
-		[oldController presentModalViewController:currentController animated:NO];
-	}
-	else if (transitionType == HMGLTransitionTypeControllerDismission) {
-		[oldController dismissModalViewControllerAnimated:NO];
-	}	
-	
-	// transition type
-	transitionType = HMGLTransitionTypeNone;
-}
-
 #pragma mark -
 #pragma mark Memory
-- (void)dealloc {
-	[tempOverlayView release];
-	[containerView release];
-	[transitionView release];
-	
-	[oldController release];
-	[currentController release];
-	
-	[super dealloc];
-}
 
 @end

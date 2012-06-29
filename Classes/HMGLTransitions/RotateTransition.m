@@ -21,7 +21,9 @@
 #import "RotateTransition.h"
 
 
-@implementation RotateTransition
+@implementation RotateTransition {
+	GLfloat animationTime;
+}
 
 - (void)initTransition {
 	

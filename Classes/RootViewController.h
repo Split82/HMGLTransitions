@@ -34,8 +34,8 @@
 	NSInteger selectedTransitionIdx;
 }
 
-@property (nonatomic, retain) IBOutlet UIView *view1;
-@property (nonatomic, retain) IBOutlet UIView *view2;
+@property (nonatomic, strong) IBOutlet UIView *view1;
+@property (nonatomic, strong) IBOutlet UIView *view2;
 
 - (IBAction)viewTransitionButtonPressed:(id)sender;
 - (IBAction)modalPresentationButtonPressed:(id)sender;

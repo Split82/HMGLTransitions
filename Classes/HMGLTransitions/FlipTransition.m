@@ -21,7 +21,9 @@
 #import "FlipTransition.h"
 
 
-@implementation FlipTransition
+@implementation FlipTransition {
+	GLfloat animationTime;
+}
 
 @synthesize transitionType;
 

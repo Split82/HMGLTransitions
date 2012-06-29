@@ -26,11 +26,7 @@ typedef enum {
 	Switch3DTransitionLeft
 } Switch3DTransitionType;
 
-@interface Switch3DTransition : HMGLTransition {
-
-	Switch3DTransitionType transitionType;
-	GLfloat animationTime;
-}
+@interface Switch3DTransition : HMGLTransition 
 
 @property (nonatomic, assign) Switch3DTransitionType transitionType;
 

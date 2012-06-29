@@ -30,23 +30,7 @@ typedef enum {
 }
 HMGLTransitionType;
 
-@interface HMGLTransitionManager : NSObject <HMGLTransitionViewDelegate> {
-
-	HMGLTransitionView *transitionView;
-	
-	// UIView transitions
-	UIView *containerView;
-	
-	// UIViewController transitions
-	UIViewController *oldController;
-	UIViewController *currentController;
-	
-	UIImageView *tempOverlayView;
-	
-	BOOL animating;
-	
-	HMGLTransitionType transitionType;
-}
+@interface HMGLTransitionManager : NSObject  
 
 + (HMGLTransitionManager*)sharedTransitionManager;
 

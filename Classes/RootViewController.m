@@ -25,12 +25,14 @@
 #import "RotateTransition.h"
 #import "ClothTransition.h"
 #import "DoorsTransition.h"
+#import "CubeTransition.h"
+#import "FoldTransition.h"
 
 #import "ModalViewController.h"
 
 @interface RootViewController()
 
-@property (nonatomic, retain) HMGLTransition *transition;
+@property (nonatomic, strong) HMGLTransition *transition;
 
 @end
 
@@ -47,20 +49,41 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
 	
-		Switch3DTransition *t1 = [[[Switch3DTransition alloc] init] autorelease];
+		Switch3DTransition *t1 = [[Switch3DTransition alloc] init];
 		t1.transitionType = Switch3DTransitionLeft;
 		
-		FlipTransition *t2 = [[[FlipTransition alloc] init] autorelease];
+		FlipTransition *t2 = [[FlipTransition alloc] init];
 		t2.transitionType = FlipTransitionRight;		
+        
+        DoorsTransition *t3 = [[DoorsTransition alloc] init]; 
+        t3.transitionType = DoorsTransitionTypeClose; 
 		
+        FoldTransition* tfld1 = [[FoldTransition alloc] init];
+        tfld1.foldDirection = FoldDirectionRight;
+        FoldTransition* tfld2 = [[FoldTransition alloc] init];
+        tfld2.foldDirection = FoldDirectionLeft;
+        
+        FoldTransition* tufld1 = [[FoldTransition alloc] init];
+        tufld1.foldDirection = FoldDirectionRight;
+        tufld1.foldType = Unfold;
+        FoldTransition* tufld2 = [[FoldTransition alloc] init];
+        tufld2.foldDirection = FoldDirectionLeft;
+        tufld2.foldType = Unfold;
+
 		transitionsArray = [[NSArray alloc] initWithObjects:
-							[[[Switch3DTransition alloc] init] autorelease],
+							[[Switch3DTransition alloc] init],
 							t1,
-							[[[ClothTransition alloc] init] autorelease],							
-							[[[FlipTransition alloc] init] autorelease],
+							[[ClothTransition alloc] init],							
+							[[FlipTransition alloc] init],
 							t2,
-							[[[RotateTransition alloc] init] autorelease],
-							[[[DoorsTransition alloc] init] autorelease],
+							[[RotateTransition alloc] init],
+							[[DoorsTransition alloc] init],
+                            t3, 
+                            [[CubeTransition alloc] init], 
+                            tfld1,
+                            tfld2,
+                            tufld1,
+                            tufld2,
 							nil];
 		
 		transitionsNamesArray = [[NSArray alloc] initWithObjects:
@@ -70,7 +93,13 @@
 								 @"Flip left",
 								 @"Flip right",
 								 @"Rotate",
-								 @"Doors",
+								 @"Opening doors",
+								 @"Closing doors",
+                                 @"Cube", 
+								 @"Fold Right",
+								 @"Fold Left",
+								 @"Unfold Right",
+								 @"Unfold Left",
 								 nil];
 								 
 		
@@ -162,7 +191,6 @@
 	
 	[[HMGLTransitionManager sharedTransitionManager] presentModalViewController:newController onViewController:self];
 	
-	[newController release];
 }
 
 #pragma mark -
@@ -181,7 +209,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
     if ([transitionsArray objectAtIndex:indexPath.row] == transition) {
@@ -224,14 +252,5 @@
 }
 
 
-- (void)dealloc {
-	[transitionsArray release];
-	[transition release];
-	
-	[view1 release];
-	[view2 release];
-	
-    [super dealloc];
-}
 
 @end

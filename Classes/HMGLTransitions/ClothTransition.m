@@ -31,6 +31,11 @@ typedef struct {
 	GLfloat x, y, z;
 } Vector3;
 
+Vector3 substractVectors(Vector3 v1, Vector3 v2);
+void addVectors(Vector3 *v1, Vector3 v2);
+void multiplyVector(Vector3 *v, GLfloat a);
+GLfloat vectorLength(Vector3 v);
+
 Vector3 substractVectors(Vector3 v1, Vector3 v2) {
 	Vector3 r;
 	r.x = v1.x - v2.x;
@@ -55,7 +60,29 @@ GLfloat vectorLength(Vector3 v) {
 	return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-@interface ClothTransition()
+@interface ClothTransition() {
+    
+	CGFloat width;
+	CGFloat height;
+	
+	GLfloat oglWidth;
+	GLfloat oglHeight;
+	
+	float *velocities;
+	GLfloat *normals;
+	GLfloat *vertices;
+	GLfloat *texCoords;
+	GLushort *indices;
+	GLsizei indicesCount;
+	
+	GLfloat friction;
+	GLfloat velocityStrength;
+	
+	float remainingCalcTime;
+	
+	float animationTime;
+}
+
 
 - (void)punchAtPoint:(CGPoint)punchPoint withTime:(NSTimeInterval)frameTime;
 
@@ -500,7 +527,6 @@ GLfloat vectorLength(Vector3 v) {
 	free(velocities);
 	free(vertices);
 	free(indices);
-	[super dealloc];
 }
 
 @end

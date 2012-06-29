@@ -1,8 +1,10 @@
-// Copyright (c) 2010 Hyperbolic Magnetism
-// 
-// Modifications for closing doors transition 
-// Copyright (c) 2011 Karim-Pierre Maalej 
-// 
+//
+//  FoldTransition.h
+//  HMGLTransitions
+//
+//  Created by John Baker on 3/4/12.
+//  Copyright (c) 2012 5 to 9 Studio. All rights reserved.
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -25,12 +27,28 @@
 #import "HMGLTransition.h"
 
 typedef enum {
-	DoorsTransitionTypeOpen,
-	DoorsTransitionTypeClose
-} DoorsTransitionType;
+	FoldDirectionRight,	
+	FoldDirectionLeft,
+	FoldDirectionTop,
+	FoldDirectionBottom,
+} FoldDirection;
 
-@interface DoorsTransition : HMGLTransition 
+typedef enum {
+	Fold,	
+	Unfold,
+} FoldType;
 
-@property (nonatomic, assign) DoorsTransitionType transitionType;
+@interface FoldTransition : HMGLTransition {
+    
+	FoldDirection foldDirection;
+	FoldType foldType;
+	
+    int numberOfFolds;
+	GLfloat animationTime;
+}
+
+@property (nonatomic, assign) int numberOfFolds;
+@property (nonatomic, assign) FoldDirection foldDirection;
+@property (nonatomic, assign) FoldType foldType;
 
 @end

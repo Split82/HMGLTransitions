@@ -22,12 +22,9 @@
 
 @protocol ModalControllerDelegate;
 
-@interface ModalViewController : UIViewController {
+@interface ModalViewController : UIViewController 
 
-	id <ModalControllerDelegate> delegate;
-}
-
-@property (nonatomic, assign) id <ModalControllerDelegate> delegate;
+@property (nonatomic, unsafe_unretained) id <ModalControllerDelegate> delegate;
 
 - (IBAction)closeButtonPressed;
 

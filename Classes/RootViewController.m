@@ -25,6 +25,7 @@
 #import "RotateTransition.h"
 #import "ClothTransition.h"
 #import "DoorsTransition.h"
+#import "CubeTransition.h"
 
 #import "ModalViewController.h"
 
@@ -65,6 +66,7 @@
 							[[RotateTransition alloc] init],
 							[[DoorsTransition alloc] init],
                             t3, 
+                            [[CubeTransition alloc] init], 
 							nil];
 		
 		transitionsNamesArray = [[NSArray alloc] initWithObjects:
@@ -76,6 +78,7 @@
 								 @"Rotate",
 								 @"Opening doors",
 								 @"Closing doors",
+                                 @"Cube", 
 								 nil];
 								 
 		

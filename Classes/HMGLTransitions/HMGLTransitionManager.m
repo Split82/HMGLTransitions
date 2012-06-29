@@ -45,8 +45,6 @@
 @property (nonatomic, strong) UIViewController *oldController;
 @property (nonatomic, strong) UIViewController *currentController;
 
-@property(strong) void (^completionBlock)(); 
-
 @end
 
 
@@ -57,8 +55,6 @@
 
 @synthesize oldController;
 @synthesize currentController;
-
-@synthesize completionBlock; 
 
 #pragma mark -
 #pragma mark Singleton

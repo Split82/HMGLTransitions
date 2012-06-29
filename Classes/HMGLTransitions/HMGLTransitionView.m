@@ -20,7 +20,45 @@
 
 #import "HMGLTransitionView.h"
 
-@interface HMGLTransitionView()
+@interface HMGLTransitionView() {    
+    
+    EAGLContext *context;
+	
+    // The pixel dimensions of the CAEAGLLayer
+    GLint backingWidth;
+    GLint backingHeight;
+	
+    // The OpenGL ES names for the framebuffer and renderbuffer used to render to this view
+    GLuint defaultFramebuffer, colorRenderbuffer;
+	GLuint depthRenderbuffer;
+    
+	//
+    BOOL animating;
+    BOOL displayLinkSupported;
+    NSInteger animationFrameInterval;
+    // Use of the CADisplayLink class is the preferred method for controlling your animation timing.
+    // CADisplayLink will link to the main display and fire every vsync when added to a given run-loop.
+    // The NSTimer class is used only as fallback when running on a pre 3.1 device where CADisplayLink
+    // isn't available.
+    id displayLink;
+    NSTimer *animationTimer;
+	
+	// transition
+	HMGLTransition *transition;
+	
+	// textures
+	GLuint beginTexture;
+	GLuint endTexture;
+	
+	GLfloat textureWidthNormalized;
+	GLfloat textureHeightNormalized;
+	
+	// frame times
+	NSTimeInterval lastTime, thisTime, calcTime;
+	
+	// frames frame
+	int framesCount;
+}
 
 - (void)deleteFramebuffer;
 - (void)setContext:(EAGLContext *)newContext;

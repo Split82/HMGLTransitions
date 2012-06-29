@@ -21,9 +21,6 @@
 #import <Foundation/Foundation.h>
 #import "HMGLTransition.h"
 
-@interface RotateTransition : HMGLTransition {
-		
-	GLfloat animationTime;
-}
+@interface RotateTransition : HMGLTransition 
 
 @end

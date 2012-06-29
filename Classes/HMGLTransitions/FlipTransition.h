@@ -26,12 +26,7 @@ typedef enum {
 	FlipTransitionLeft
 } FlipTransitionType;
 
-@interface FlipTransition : HMGLTransition {
-
-	FlipTransitionType transitionType;
-	
-	GLfloat animationTime;
-}
+@interface FlipTransition : HMGLTransition 
 
 @property (nonatomic, assign) FlipTransitionType transitionType;
 

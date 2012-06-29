@@ -23,7 +23,9 @@
 
 #import "DoorsTransition.h"
 
-@implementation DoorsTransition
+@implementation DoorsTransition {
+	GLfloat animationTime;
+}
 
 @synthesize transitionType;
 

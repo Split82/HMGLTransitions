@@ -20,7 +20,24 @@
 
 #import "HMGLTransitionManager.h"
 
-@interface HMGLTransitionManager()
+@interface HMGLTransitionManager() {
+    
+	HMGLTransitionView *transitionView;
+	
+	// UIView transitions
+	UIView *containerView;
+	
+	// UIViewController transitions
+	UIViewController *oldController;
+	UIViewController *currentController;
+	
+	UIImageView *tempOverlayView;
+	
+	BOOL animating;
+	
+	HMGLTransitionType transitionType;
+}
+
 
 @property (nonatomic, retain) HMGLTransitionView *transitionView;
 @property (nonatomic, retain) UIView *containerView;

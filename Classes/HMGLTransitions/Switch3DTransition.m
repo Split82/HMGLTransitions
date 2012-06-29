@@ -19,7 +19,9 @@
 // THE SOFTWARE.
 #import "Switch3DTransition.h"
 
-@implementation Switch3DTransition
+@implementation Switch3DTransition {
+	GLfloat animationTime;
+}
 
 @synthesize transitionType;
 

@@ -60,7 +60,29 @@ GLfloat vectorLength(Vector3 v) {
 	return sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
 }
 
-@interface ClothTransition()
+@interface ClothTransition() {
+    
+	CGFloat width;
+	CGFloat height;
+	
+	GLfloat oglWidth;
+	GLfloat oglHeight;
+	
+	float *velocities;
+	GLfloat *normals;
+	GLfloat *vertices;
+	GLfloat *texCoords;
+	GLushort *indices;
+	GLsizei indicesCount;
+	
+	GLfloat friction;
+	GLfloat velocityStrength;
+	
+	float remainingCalcTime;
+	
+	float animationTime;
+}
+
 
 - (void)punchAtPoint:(CGPoint)punchPoint withTime:(NSTimeInterval)frameTime;
 

@@ -198,10 +198,10 @@ static HMGLTransitionManager *sharedTransitionManager = nil;
 	
 	// view controllers
 	if (transitionType == HMGLTransitionTypeControllerPresentation) {
-		[oldController presentModalViewController:currentController animated:NO];
+		[oldController presentViewController:currentController animated:NO completion:nil];
 	}
 	else if (transitionType == HMGLTransitionTypeControllerDismission) {
-		[oldController dismissModalViewControllerAnimated:NO];
+        [oldController dismissViewControllerAnimated:NO completion:nil];
 	}	
 	
 	// transition type

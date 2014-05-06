@@ -34,5 +34,5 @@ typedef enum {
 }
 
 @property (nonatomic, assign) DoorsTransitionType transitionType;
-
+@property (nonatomic, assign) Float32 leftWeight;
 @end

@@ -23,10 +23,12 @@
 @implementation DoorsTransition
 
 @synthesize transitionType;
+@synthesize leftWeight;
 
 - (id)init {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		transitionType = DoorsTransitionTypeOpen;
+    leftWeight = 0.5;
 	}
 	return self;
 }
@@ -67,24 +69,33 @@
 		w,  h,
     };
     	
-	GLfloat verticesHalf[] = {
-        -w * 0.5, -h,
-		w * 0.5, -h,
-        -w * 0.5,  h,
-		w * 0.5,  h,
+  Float32 rightWeight = 1.0 - leftWeight;
+	GLfloat verticesHalf1[] = {
+        -w * leftWeight, -h,
+		w * leftWeight, -h,
+        -w * leftWeight,  h,
+		w * leftWeight,  h,
     };
     
-    GLfloat texcoords1[] = {
+	GLfloat verticesHalf2[] = {
+    -w * rightWeight, -h,
+		w * rightWeight, -h,
+    -w * rightWeight,  h,
+		w * rightWeight,  h,
+  };
+
+  GLfloat texcoords1[] = {
 		basicTexCoords.x0, basicTexCoords.y0,
-		(basicTexCoords.x1 + basicTexCoords.x0) * 0.5, (basicTexCoords.y1 + basicTexCoords.y0) * 0.5,
+		(basicTexCoords.x1 + basicTexCoords.x0) * leftWeight, (basicTexCoords.y1 + basicTexCoords.y0) * 0.5,
 		basicTexCoords.x2, basicTexCoords.y2,
-		(basicTexCoords.x3 + basicTexCoords.x2) * 0.5, (basicTexCoords.y2 + basicTexCoords.y3) * 0.5,	
+		(basicTexCoords.x3 + basicTexCoords.x2) * leftWeight, (basicTexCoords.y2 + basicTexCoords.y3) * 0.5,	
     };
 	
+
     GLfloat texcoords2[] = {
-		(basicTexCoords.x1 + basicTexCoords.x0) * 0.5, (basicTexCoords.y1 + basicTexCoords.y0) * 0.5,
+		(basicTexCoords.x1 + basicTexCoords.x0) * leftWeight, (basicTexCoords.y1 + basicTexCoords.y0) * 0.5,
 		basicTexCoords.x1, basicTexCoords.y1,
-		(basicTexCoords.x3 + basicTexCoords.x2) * 0.5, (basicTexCoords.y2 + basicTexCoords.y3) * 0.5,
+		(basicTexCoords.x3 + basicTexCoords.x2) * leftWeight, (basicTexCoords.y2 + basicTexCoords.y3) * 0.5,
 		basicTexCoords.x3, basicTexCoords.y3,	
     };		
 	
@@ -116,26 +127,26 @@
 	// left	
 	glPushMatrix();
 	glBindTexture(GL_TEXTURE_2D, beginTexture);		
-    glVertexPointer(2, GL_FLOAT, 0, verticesHalf);
+    glVertexPointer(2, GL_FLOAT, 0, verticesHalf1);
     glEnableClientState(GL_VERTEX_ARRAY);	
     glTexCoordPointer(2, GL_FLOAT, 0, texcoords1);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     glTranslatef(-w, 0, -1);
 	glRotatef(-sah * sah * sah * 90, 0, 1, 0);		
-	glTranslatef(w * 0.5, 0, 0);
+	glTranslatef(w * leftWeight, 0, 0);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glPopMatrix();
 	
 	// right
 	glPushMatrix();	
-    glVertexPointer(2, GL_FLOAT, 0, verticesHalf);
+    glVertexPointer(2, GL_FLOAT, 0, verticesHalf2);
     glEnableClientState(GL_VERTEX_ARRAY);		
     glTexCoordPointer(2, GL_FLOAT, 0, texcoords2);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);	 
 	glTranslatef(w, 0, -1);
 	glRotatef(sah * sah * sah * 90, 0, 1, 0);		
-	glTranslatef(-w * 0.5, 0, 0);
+	glTranslatef(-w * rightWeight, 0, 0);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glPopMatrix();	
 }
